@@ -16,6 +16,9 @@ extension UIColor {
     static let customWhite = UIColor(hex: "#F4F4F4")
     static let darkBackground = UIColor(hex: "#040404")
     static let grayStroke = UIColor(hex: "#4D555E")
+    static let customLightGray = UIColor(hex: "#EDEDED").withAlphaComponent(0.8)
+    static let customRed = UIColor(hex: "#D70015")
+    static let lineBorder = UIColor(hex: "#4D555E80").withAlphaComponent(0.5)
 
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
