@@ -14,11 +14,15 @@ protocol TodoListViewProtocol: AnyObject {
 protocol TodoListPresenterProtocol: AnyObject {
     func viewDidLoad()
     func didTapCheckmark(for todoId: Int, isCompleted: Bool)
+    func didLongPressTodo(_ todo: TodoItem)
+    func deleteTodo(id: Int)
+    func didTapCreate()
 }
 
 protocol TodoListInteractorInputProtocol: AnyObject {
     func loadData()
     func updateTodoStatus(id: Int, isCompleted: Bool)
+    func deleteTodo(id: Int)
 }
 
 protocol TodoListInteractorOutputProtocol: AnyObject {
@@ -27,5 +31,8 @@ protocol TodoListInteractorOutputProtocol: AnyObject {
 
 protocol TodoListRouterProtocol: AnyObject {
     static func createModule() -> UIViewController
+    func showTodoMenu(for todo: TodoItem)
+    func navigateToEdit(for todo: TodoItem) 
+    func navigateToCreate()
 }
 

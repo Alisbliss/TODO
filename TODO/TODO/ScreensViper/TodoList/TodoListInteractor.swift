@@ -12,7 +12,7 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
     weak var presenter: TodoListInteractorOutputProtocol?
     private let persistence = PersistenceController.shared
     private let firstLaunchKey = "isFirstLaunchDone"
-
+    
     func loadData() {
         let isFirstLaunchDone = UserDefaults.standard.bool(forKey: firstLaunchKey)
         
@@ -38,11 +38,11 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
             }
         }
     }
-
+    
     private func saveToCoreData(_ items: [TodoItem]) async {
         
         await persistence.container.performBackgroundTask { context in
-
+            
             items.forEach { item in
                 let entity = TodoEntity(context: context)
                 entity.id = Int64(item.id)
@@ -87,7 +87,7 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
             }
         }
     }
-
+    
     func updateTodoStatus(id: Int, isCompleted: Bool) {
         persistence.container.performBackgroundTask { [weak self] context in
             let request: NSFetchRequest<TodoEntity> = TodoEntity.fetchRequest()
@@ -100,6 +100,19 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
                 DispatchQueue.main.async {
                     self?.fetchFromCoreData()
                 }
+            }
+        }
+    }
+    
+    func deleteTodo(id: Int) { 
+        persistence.container.performBackgroundTask { [weak self] context in
+            let request: NSFetchRequest<TodoEntity> = TodoEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %d", id)
+            
+            if let entity = try? context.fetch(request).first {
+                context.delete(entity)
+                try? context.save()
+                DispatchQueue.main.async { self?.fetchFromCoreData() }
             }
         }
     }

@@ -8,6 +8,7 @@
 final class TodoListPresenter: TodoListPresenterProtocol {
     weak var view: TodoListViewProtocol?
     var interactor: TodoListInteractorInputProtocol?
+    var router: TodoListRouterProtocol?
     
     func viewDidLoad() {
         interactor?.loadData()
@@ -15,6 +16,18 @@ final class TodoListPresenter: TodoListPresenterProtocol {
     
     func didTapCheckmark(for todoId: Int, isCompleted: Bool) {
         interactor?.updateTodoStatus(id: todoId, isCompleted: isCompleted)
+    }
+    
+    func didLongPressTodo(_ todo: TodoItem) {
+        router?.showTodoMenu(for: todo)
+    }
+    
+    func didTapCreate() {
+        router?.navigateToCreate()
+    }
+    
+    func deleteTodo(id: Int) {
+        interactor?.deleteTodo(id: id)
     }
 }
 

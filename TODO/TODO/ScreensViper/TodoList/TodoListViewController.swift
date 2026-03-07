@@ -43,7 +43,7 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         return label
     }()
     
-    private let createButton: UIButton = {
+    private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)
         button.setImage(UIImage(systemName: "square.and.pencil", withConfiguration: config), for: .normal)
@@ -51,6 +51,7 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         button.contentVerticalAlignment = .center
         button.contentHorizontalAlignment = .center
         button.imageView?.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(handleCreateButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -69,10 +70,15 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         }
         
         setupUI()
-        
+        setupLongPressGesture()
         presenter?.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter?.viewDidLoad()
+    }
+
     private func setupUI() {
         view.backgroundColor = .darkBackground
         
@@ -91,6 +97,7 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
             make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(56)
         }
+        
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(customTitleLabel.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(8)
@@ -151,6 +158,28 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         self.todos = todos
         countLabel.text = getTasksString(count: todos.count)
         tableView.reloadData()
+    }
+    
+    private func setupLongPressGesture() {
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+            longPress.minimumPressDuration = 0.3
+            longPress.cancelsTouchesInView = false
+        print("кнопка нажата")
+            tableView.addGestureRecognizer(longPress)
+        }
+    
+    @objc private func handleLongPress(gesture: UILongPressGestureRecognizer) {
+            if gesture.state == .began {
+                let point = gesture.location(in: tableView)
+                if let indexPath = tableView.indexPathForRow(at: point) {
+                    let item = isFiltering ? filteredTodos[indexPath.row] : todos[indexPath.row]
+                    presenter?.didLongPressTodo(item) // Нужно добавить этот метод в протокол Presenter
+                }
+            }
+        }
+    
+    @objc private func handleCreateButtonTapped() {
+        presenter?.didTapCreate()
     }
 }
 

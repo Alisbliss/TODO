@@ -17,21 +17,21 @@ final class TodoListItemCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.font = .systemFont(ofSize: 12, weight: .regular)
         return label
     }()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = .systemFont(ofSize: 12, weight: .regular)
         label.textColor = .gray
         return label
