@@ -164,7 +164,6 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
             let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
             longPress.minimumPressDuration = 0.3
             longPress.cancelsTouchesInView = false
-        print("кнопка нажата")
             tableView.addGestureRecognizer(longPress)
         }
     
