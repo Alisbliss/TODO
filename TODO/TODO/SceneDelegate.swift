@@ -13,15 +13,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        
+        let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        if isTesting {
+            return
+        }
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
-            
-            let window = UIWindow(windowScene: windowScene)
-            let rootVC = TodoListRouter.createModule()
-            let nav = UINavigationController(rootViewController: rootVC)
-            
-            window.rootViewController = nav
-            self.window = window
-            window.makeKeyAndVisible()
+        
+        let window = UIWindow(windowScene: windowScene)
+        let rootVC = TodoListRouter.createModule()
+        let nav = UINavigationController(rootViewController: rootVC)
+        
+        window.rootViewController = nav
+        self.window = window
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

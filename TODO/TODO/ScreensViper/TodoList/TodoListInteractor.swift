@@ -10,8 +10,12 @@ import CoreData
 
 final class TodoListInteractor: TodoListInteractorInputProtocol {
     weak var presenter: TodoListInteractorOutputProtocol?
-    private let persistence = PersistenceController.shared
+    private let persistence: PersistenceController
     private let firstLaunchKey = "isFirstLaunchDone"
+    
+    init(persistence: PersistenceController = .shared) {
+            self.persistence = persistence
+        }
     
     func loadData() {
         let isFirstLaunchDone = UserDefaults.standard.bool(forKey: firstLaunchKey)
@@ -25,13 +29,15 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
     
     private func fetchFromNetwork() {
         guard let url = API.todosURL else { return }
-        Task {
+        
+        Task { [weak self] in
+            guard let self else { return }
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 let decoder = JSONDecoder()
                 let decodedResponse = try decoder.decode(TodoResponse.self, from: data)
                 
-                await self.saveToCoreData(decodedResponse.todos)
+                self.saveToCoreData(decodedResponse.todos)
                 UserDefaults.standard.set(true, forKey: self.firstLaunchKey)
             } catch {
                 print("Fetch/Decode Error: \(error.localizedDescription)")
@@ -39,9 +45,8 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
         }
     }
     
-    private func saveToCoreData(_ items: [TodoItem]) async {
-        
-        await persistence.container.performBackgroundTask { context in
+    private func saveToCoreData(_ items: [TodoItem]) {
+       persistence.container.performBackgroundTask { context in
             
             items.forEach { item in
                 let entity = TodoEntity(context: context)
@@ -90,8 +95,9 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
     
     func updateTodoStatus(id: Int, isCompleted: Bool) {
         persistence.container.performBackgroundTask { [weak self] context in
+            
             let request: NSFetchRequest<TodoEntity> = TodoEntity.fetchRequest()
-            request.predicate = NSPredicate(format: "id == %d", id)
+            request.predicate = NSPredicate(format: "id == %lld", Int64(id))
             
             if let entity = try? context.fetch(request).first {
                 entity.completed = isCompleted
@@ -106,8 +112,9 @@ final class TodoListInteractor: TodoListInteractorInputProtocol {
     
     func deleteTodo(id: Int) { 
         persistence.container.performBackgroundTask { [weak self] context in
+            
             let request: NSFetchRequest<TodoEntity> = TodoEntity.fetchRequest()
-            request.predicate = NSPredicate(format: "id == %d", id)
+            request.predicate = NSPredicate(format: "id == %lld", Int64(id))
             
             if let entity = try? context.fetch(request).first {
                 context.delete(entity)
