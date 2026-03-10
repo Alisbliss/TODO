@@ -57,8 +57,6 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupSearchController()
-        
         if presenter == nil {
             let presenter = TodoListPresenter()
             let interactor = TodoListInteractor()
@@ -70,6 +68,8 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         }
         
         setupUI()
+        setupTableView()
+        setupSearchController()
         setupLongPressGesture()
         presenter?.viewDidLoad()
     }
@@ -78,18 +78,17 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         super.viewWillAppear(animated)
         presenter?.viewDidLoad()
     }
-
+    
     private func setupUI() {
         view.backgroundColor = .darkBackground
         
-        view.addSubview(customTitleLabel)
-        view.addSubview(searchBar)
-        view.addSubview(tableView)
-        view.addSubview(bottomBar)
+        [customTitleLabel, searchBar, bottomBar].forEach {
+            view.addSubview($0)
+        }
         
-        bottomBar.addSubview(countLabel)
-        bottomBar.addSubview(createButton)
-        
+        [countLabel, createButton].forEach {
+            bottomBar.addSubview($0)
+        }
         
         customTitleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(57)
@@ -99,9 +98,9 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         }
         
         searchBar.snp.makeConstraints { make in
-            make.top.equalTo(customTitleLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(8)
-            make.trailing.equalToSuperview().offset(-8)
+            make.top.equalTo(customTitleLabel.snp.bottom).offset(16)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(36)
         }
         
@@ -121,10 +120,15 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
             make.width.equalTo(68)
             make.height.equalTo(28)
         }
-        
+    }
+    
+    private func setupTableView() {
         tableView.register(TodoListItemCell.self, forCellReuseIdentifier: TodoListItemCell.identifier)
+        
         tableView.dataSource = self
         tableView.backgroundColor = .darkBackground
+        
+        view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(20)
@@ -140,6 +144,7 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         searchBar.barStyle = .black
         searchBar.backgroundImage = UIImage()
         searchBar.tintColor = .customYellow
+        searchBar.layoutMargins = .zero
         
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.backgroundColor = .customGray
@@ -147,6 +152,11 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
             textField.layer.masksToBounds = true
             textField.borderStyle = .none
             textField.leftView?.tintColor = .gray
+            
+            textField.snp.remakeConstraints { make in
+                make.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                make.height.equalTo(36)
+            }
         }
         
         let micImage = UIImage(systemName: "mic.fill")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
@@ -161,21 +171,21 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
     }
     
     private func setupLongPressGesture() {
-            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-            longPress.minimumPressDuration = 0.3
-            longPress.cancelsTouchesInView = false
-            tableView.addGestureRecognizer(longPress)
-        }
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPress.minimumPressDuration = 0.3
+        longPress.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(longPress)
+    }
     
     @objc private func handleLongPress(gesture: UILongPressGestureRecognizer) {
-            if gesture.state == .began {
-                let point = gesture.location(in: tableView)
-                if let indexPath = tableView.indexPathForRow(at: point) {
-                    let item = isFiltering ? filteredTodos[indexPath.row] : todos[indexPath.row]
-                    presenter?.didLongPressTodo(item) // Нужно добавить этот метод в протокол Presenter
-                }
+        if gesture.state == .began {
+            let point = gesture.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: point) {
+                let item = isFiltering ? filteredTodos[indexPath.row] : todos[indexPath.row]
+                presenter?.didLongPressTodo(item) 
             }
         }
+    }
     
     @objc private func handleCreateButtonTapped() {
         presenter?.didTapCreate()

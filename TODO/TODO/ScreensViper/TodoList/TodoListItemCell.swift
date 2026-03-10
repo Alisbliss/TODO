@@ -11,9 +11,6 @@ import SnapKit
 final class TodoListItemCell: UITableViewCell {
     static let identifier = "TodoListItemCell"
     var onCheckmarkTap: (() -> Void)?
-
-    private let checkboxView = TodoCheckboxView()
-    private let checkmarkButton = UIButton()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -40,8 +37,22 @@ final class TodoListItemCell: UITableViewCell {
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 4
+        stack.spacing = 6
         return stack
+    }()
+    
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .grayStroke
+        return view
+    }()
+    
+    private let checkboxView = TodoCheckboxView()
+    
+    private lazy var checkmarkButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(btnTapped), for: .touchUpInside)
+        return button
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -49,30 +60,34 @@ final class TodoListItemCell: UITableViewCell {
         selectionStyle = .none
         contentView.backgroundColor = .darkBackground
         
-        contentView.addSubview(checkboxView)
-        contentView.addSubview(checkmarkButton)
-        contentView.addSubview(stackView)
+        [checkboxView, checkmarkButton, stackView, separatorView].forEach {
+            contentView.addSubview($0)
+        }
         
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(descriptionLabel)
-        stackView.addArrangedSubview(dateLabel)
-        stackView.spacing = 6
+        [titleLabel, descriptionLabel, dateLabel].forEach {
+            stackView.addArrangedSubview($0)
+        }
         
         checkboxView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.top.equalToSuperview().offset(12)
+            make.centerY.equalTo(titleLabel)
             make.size.equalTo(24)
         }
         
-        checkmarkButton.addTarget(self, action: #selector(btnTapped), for: .touchUpInside)
         checkmarkButton.snp.makeConstraints { make in
             make.center.equalTo(checkboxView)
             make.size.equalTo(44)
         }
+        
         stackView.snp.makeConstraints { make in
-            make.leading.equalTo(checkmarkButton.snp.trailing).offset(6)
+            make.leading.equalTo(checkmarkButton.snp.trailing).offset(2)
             make.trailing.equalToSuperview()
             make.top.bottom.equalToSuperview().inset(12)
+        }
+        
+        separatorView.snp.makeConstraints { make in
+            make.leading.bottom.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
         }
     }
     

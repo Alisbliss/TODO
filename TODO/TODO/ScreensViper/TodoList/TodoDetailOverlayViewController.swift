@@ -86,13 +86,14 @@ final class TodoDetailOverlayViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupMenuButtons()
         configureData()
     }
 
     private func setupUI() {
-        view.addSubview(blurEffectView)
-        view.addSubview(taskContainer)
-        view.addSubview(customMenuStack)
+        [blurEffectView, taskContainer, customMenuStack].forEach {
+            view.addSubview($0)
+        }
         
         [titleLabel, descriptionLabel, dateLabel].forEach { taskContainer.addArrangedSubview($0) }
         taskContainer.isLayoutMarginsRelativeArrangement = true
@@ -112,11 +113,6 @@ final class TodoDetailOverlayViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.width.equalTo(254)
         }
-
-        setupMenuButtons()
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissSelf))
-        blurEffectView.addGestureRecognizer(tap)
     }
 
     private func setupMenuButtons() {

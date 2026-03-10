@@ -116,11 +116,10 @@ final class TodoItemController: UIViewController, TodoItemViewProtocol {
     
     // MARK: - Setup
     private func setupLayout() {
-        view.addSubview(backButton)
-        view.addSubview(scrollView)
-        view.addSubview(hiddenTextField)
+        [backButton, scrollView, hiddenTextField].forEach {
+            view.addSubview($0)
+        }
         scrollView.addSubview(contentStack)
-        
         [titleView, dateLabel, descView].forEach { contentStack.addArrangedSubview($0) }
         
         contentStack.setCustomSpacing(16, after: dateLabel)
@@ -177,7 +176,7 @@ final class TodoItemController: UIViewController, TodoItemViewProtocol {
         view.endEditing(true)
     }
     @objc private func handleBackAction() {
-      
+        
         let finalTitle = (titleView.textColor == .secondaryLabel) ? "" : titleView.text
         let finalDescription = (descView.textColor == .secondaryLabel) ? "" : descView.text
         

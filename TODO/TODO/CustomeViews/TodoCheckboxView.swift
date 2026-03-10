@@ -9,41 +9,29 @@ import UIKit
 import SnapKit
 
 final class TodoCheckboxView: UIView {
-    private let circleImageView = UIImageView()
-    private let tickImageView = UIImageView()
-
+    private let imageView = UIImageView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
-
+    
     required init?(coder: NSCoder) { fatalError() }
-
+    
     private func setupUI() {
-        addSubview(circleImageView)
-        addSubview(tickImageView)
-
-        circleImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        tickImageView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalToSuperview().multipliedBy(0.6)
+        addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview().multipliedBy(1.2)
         }
         
-        circleImageView.contentMode = .scaleAspectFit
-        tickImageView.contentMode = .scaleAspectFit
-      
-        circleImageView.image = UIImage(named: "customCircle")?.withRenderingMode(.alwaysTemplate)
-        tickImageView.image = UIImage(named: "customTick")?.withRenderingMode(.alwaysTemplate)
-        
-        circleImageView.tintColor = .grayStroke
-        tickImageView.tintColor = .customYellow
+        imageView.contentMode = .scaleAspectFit
+        update(isCompleted: false)
     }
-
+    
     func update(isCompleted: Bool) {
-        
-        tickImageView.isHidden = !isCompleted
-        
-        circleImageView.tintColor = isCompleted ? .customYellow : .grayStroke
-        tickImageView.tintColor = .customYellow
+        let imageName = isCompleted ? "checkmark.circle" : "circle"
+        let config = UIImage.SymbolConfiguration(weight: .thin)
+        imageView.image = UIImage(systemName: imageName, withConfiguration: config)
+        imageView.tintColor = isCompleted ? .customYellow : .grayStroke
     }
 }

@@ -14,7 +14,7 @@ final class TodoListRouter: TodoListRouterProtocol {
         let view = TodoListViewController()
         let presenter = TodoListPresenter()
         let interactor = TodoListInteractor()
-        let router = TodoListRouter() 
+        let router = TodoListRouter()
         
         view.presenter = presenter
         
@@ -30,21 +30,23 @@ final class TodoListRouter: TodoListRouterProtocol {
     }
     
     func showTodoMenu(for todo: TodoItem) {
-            let overlay = TodoDetailOverlayViewController(todo: todo)
-            overlay.onDelete = { [weak self] in
-                (self?.viewController as? TodoListViewController)?.presenter?.deleteTodo(id: todo.id)
-            }
-            overlay.onEdit = { [weak self] in
-                self?.navigateToEdit(for: todo)
-            }
-            viewController?.present(overlay, animated: true)
+        let overlay = TodoDetailOverlayViewController(todo: todo)
+        overlay.onDelete = { [weak self] in
+            (self?.viewController as? TodoListViewController)?.presenter?.deleteTodo(id: todo.id)
         }
+        overlay.onEdit = { [weak self] in
+            self?.navigateToEdit(for: todo)
+        }
+        viewController?.present(overlay, animated: true)
+    }
+    
     func navigateToEdit(for todo: TodoItem) {
-            let editVC = TodoItemRouter.createModule(with: todo)
-            viewController?.navigationController?.pushViewController(editVC, animated: true)
-        }
+        let editVC = TodoItemRouter.createModule(with: todo)
+        viewController?.navigationController?.pushViewController(editVC, animated: true)
+    }
+    
     func navigateToCreate() {
-            let createVC = TodoItemRouter.createModule(with: nil)
-            viewController?.navigationController?.pushViewController(createVC, animated: true)
-        }
+        let createVC = TodoItemRouter.createModule(with: nil)
+        viewController?.navigationController?.pushViewController(createVC, animated: true)
+    }
 }
