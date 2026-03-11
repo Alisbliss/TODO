@@ -170,6 +170,10 @@ final class TodoListViewController: UIViewController, TodoListViewProtocol {
         tableView.reloadData()
     }
     
+    func showLoader(_ show: Bool) {
+        showLoading(show)
+    }
+    
     private func setupLongPressGesture() {
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPress.minimumPressDuration = 0.3

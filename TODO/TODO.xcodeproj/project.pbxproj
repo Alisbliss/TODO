@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F8079DD02F58AF8800CA7F16 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F8079DCF2F58AF8800CA7F16 /* SnapKit */; };
+		F8079E022F60CE8900CA7F16 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = F8079E012F60CE8900CA7F16 /* JGProgressHUD */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8079E022F60CE8900CA7F16 /* JGProgressHUD in Frameworks */,
 				F8079DD02F58AF8800CA7F16 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,6 +111,7 @@
 			name = TODO;
 			packageProductDependencies = (
 				F8079DCF2F58AF8800CA7F16 /* SnapKit */,
+				F8079E012F60CE8900CA7F16 /* JGProgressHUD */,
 			);
 			productName = TODO;
 			productReference = F8079D882F58A18F00CA7F16 /* TODO.app */;
@@ -167,6 +170,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F8079DCE2F58AF8800CA7F16 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				F8079E002F60CE8900CA7F16 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F8079D892F58A18F00CA7F16 /* Products */;
@@ -486,6 +490,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		F8079E002F60CE8900CA7F16 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -493,6 +505,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F8079DCE2F58AF8800CA7F16 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		F8079E012F60CE8900CA7F16 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F8079E002F60CE8900CA7F16 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

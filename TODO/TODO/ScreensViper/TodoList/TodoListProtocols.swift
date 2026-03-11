@@ -9,6 +9,7 @@ import UIKit
 
 protocol TodoListViewProtocol: AnyObject {
     func showTodos(_ todos: [TodoItem])
+    func showLoader(_ show: Bool)
 }
 
 protocol TodoListPresenterProtocol: AnyObject {

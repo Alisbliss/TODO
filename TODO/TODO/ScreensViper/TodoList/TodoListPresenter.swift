@@ -11,6 +11,7 @@ final class TodoListPresenter: TodoListPresenterProtocol {
     var router: TodoListRouterProtocol?
     
     func viewDidLoad() {
+        view?.showLoader(true)
         interactor?.loadData()
     }
     
@@ -33,6 +34,7 @@ final class TodoListPresenter: TodoListPresenterProtocol {
 
 extension TodoListPresenter: TodoListInteractorOutputProtocol {
     func didFetchTodos(_ todos: [TodoItem]) {
+        view?.showLoader(false)
         view?.showTodos(todos)
     }
 }
